@@ -1,0 +1,16 @@
+<launch>
+  <!-- Launch the grid map simple demo node -->
+  <node pkg="create_maps" type="simple_demo_node" name="grid_map_simple_demo" output="screen" />
+  <node pkg="create_maps" type="hybrid_astar_test" name="hybrid_astar_test" output="screen" />
+  
+  <!-- <node pkg="create_maps" type="ompl_test_node" name="ompl_test_node" output="screen" /> -->
+  
+  
+  <!-- Launch the grid map visualizer -->
+  <!-- <node pkg="grid_map_visualization" type="grid_map_visualization" name="grid_map_visualization" output="screen">
+    <rosparam command="load" file="$(find create_maps)/config/simple_demo.yaml" />
+  </node> -->
+  <!-- Launch RViz with the demo configuration -->
+  <node name="rviz" pkg="rviz" type="rviz" output="screen" 
+  args="-d $(find create_maps)/rviz/map_vis.rviz" />
+</launch>
