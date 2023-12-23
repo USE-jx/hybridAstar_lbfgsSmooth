@@ -24,3 +24,5 @@ sudo apt-get install ros-$ROS_DISTRO-grid-map
 创建一个工作空间
 
 把src放入工作空间后`catkin_make`编译即可.
+## 运行视频
+https://www.bilibili.com/video/BV1CK411876z/?spm_id_from=333.999.0.0&vd_source=62bfb7720b0b2f9941f7f34210ba6a18
