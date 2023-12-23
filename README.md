@@ -3,7 +3,7 @@ hybrid astar with smooth, optimization solver is lbfgs
 
 ## 运行效果
 
-![image-20231222222329069](/home/jiaxier/Desktop/hybridAstar_lbfgsSmooth/image-20231222222329069.png)
+![image-20231222222329069](./image-20231222222329069.png)
 
 如图所示，黑色为障碍物，细蓝色带点的是混合A星搜索出来的路径点，红色是优化后的路径。
 
