@@ -1,3 +1,13 @@
+/**
+ * @file simple_demo_node.cpp
+ * @author jiaxier (you@domain.com)
+ * @brief 
+ * @version 0.1
+ * @date 2023-12-23
+ * 
+ * @copyright Copyright (c) 2023
+ * 
+ */
 #include <ros/ros.h>
 #include <grid_map_ros/grid_map_ros.hpp>
 #include <grid_map_msgs/GridMap.h>
@@ -21,6 +31,7 @@ int main(int argc, char **argv)
     map.getLength().x(), map.getLength().y(),
     map.getSize()(0), map.getSize()(1));
 
+    //给定一些多边形的顶点，然后遍历多边形把多边形内的高度升起来就表示障碍物
     Polygon polygon1({{-8, 0}, {-8, 5}, {-3, 5},{-3, 0} });
     Polygon polygon2({{13, 12}, {6, 12}, {10, 4}});
     Polygon polygon3({{1, -10}, {1, -5}, {6, -5},{6, -10} });

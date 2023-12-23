@@ -1,3 +1,13 @@
+/**
+ * @file smooth.cpp
+ * @author jiaxier (you@domain.com)
+ * @brief 
+ * @version 0.1
+ * @date 2023-12-23
+ * 
+ * @copyright Copyright (c) 2023
+ * 
+ */
 #include "hybrid_astar_searcher/smooth.h"
 
 namespace planning

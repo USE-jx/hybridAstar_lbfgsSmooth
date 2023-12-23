@@ -38,7 +38,10 @@ namespace og = ompl::geometric;
 namespace planning {
 
 
-
+/**
+ * @brief 存储混合A星结果的类型
+ * 
+ */
 struct HybridAstarResult {
     std::vector<double> x;
     std::vector<double> y;

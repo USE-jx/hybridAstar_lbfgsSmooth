@@ -1,3 +1,13 @@
+/**
+ * @file node3d.h
+ * @author jiaxier (you@domain.com)
+ * @brief 
+ * @version 0.1
+ * @date 2023-12-23
+ * 
+ * @copyright Copyright (c) 2023
+ * 
+ */
 #pragma once
 
 #include <iostream>
@@ -11,6 +21,10 @@
 
 namespace planning {
 
+/**
+ * @brief 混合A星搜索用的到节点
+ * 
+ */
 class Node3d
 {
 private:

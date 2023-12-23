@@ -1,6 +1,6 @@
 /**
  * @file calculate_heuristic.h
- * @author your name (you@domain.com)
+ * @author jiaxier (you@domain.com)
  * @brief 
  * @version 0.1
  * @date 2023-10-06
@@ -97,7 +97,6 @@ public:
     bool isOnObstacle(std::shared_ptr<Node2d> node);
 
     std::vector<Vec2d> getAstartPath();
-
 
     bool calculateHeuByAstar(Vec2d start_pos, Vec2d goal_pos);
 

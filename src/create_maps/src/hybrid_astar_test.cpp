@@ -1,3 +1,13 @@
+/**
+ * @file hybrid_astar_test.cpp
+ * @author jiaxier (you@domain.com)
+ * @brief 
+ * @version 0.1
+ * @date 2023-12-23
+ * 
+ * @copyright Copyright (c) 2023
+ * 
+ */
 #include <ros/ros.h>
 #include <nav_msgs/Path.h>
 #include <geometry_msgs/PoseStamped.h>
@@ -29,8 +39,10 @@
 
 namespace ob = ompl::base;
 namespace og = ompl::geometric;
+typedef ompl::base::SE2StateSpace::StateType State;
 using namespace planning;
 using namespace std;
+using namespace grid_map;
 
 ros::Publisher path_vis_pub, marker_pub;
 
@@ -43,14 +55,11 @@ geometry_msgs::PoseStamped pose;
 int N = 100;
 double dt = 0.01;
 Eigen::Vector3d start, goal;
+bool has_start, has_goal;
+Vec3d start_pose, goal_pose;
 
+ros::Publisher voronoi_pub;
 
-
-
-ros::Publisher ellipsoid_pub, polyhedron_pub,voronoi_pub;
-
-typedef ompl::base::SE2StateSpace::StateType State;
-using namespace grid_map;
 GridMap gmap;
 std::unique_ptr<HybridAstar> hybrid_astar_ptr;
 HybridAstarResult result;
@@ -60,8 +69,6 @@ visualization_msgs::Marker voronoi;
 std::unique_ptr<Smoother> smoother_ptr;
 DynamicVoronoi voronoiDiagram;
 
-bool has_start, has_goal;
-Vec3d start_pose, goal_pose;
 
 void Gridmap_Callback(grid_map_msgs::GridMap msg){
     if (gmap.exists("elevation")) return;
@@ -77,7 +84,8 @@ void Gridmap_Callback(grid_map_msgs::GridMap msg){
     int size_x = gmap.getSize()(0);
     int size_y = gmap.getSize()(1);
     //cout << "size :" << size_x << " " << size_y << endl;
-
+    
+    //初始化一个二进制地图，建voronoi图用
     bool **bin_map;
     bin_map = new bool *[size_x];
     for (int i = 0; i < size_x; ++i) {
@@ -140,6 +148,11 @@ void Gridmap_Callback(grid_map_msgs::GridMap msg){
 }   
 
 void visPath(std::vector<Eigen::Vector3d> path);
+
+/**
+ * @brief 主循环函数，给初始点和目标点就生成一条路径
+ * 
+ */
 void run() {
     //ROS_INFO("run()");
     if (has_start && has_goal) {
@@ -157,9 +170,10 @@ void run() {
                 path2smooth.push_back({result.x[i], result.y[i], result.theta[i]});
             }
             
+            //lbfgs平滑
             auto smooth_path_start = std::chrono::high_resolution_clock::now();
             smoother_ptr->optimize(voronoiDiagram, path2smooth);
-            //smoother_ptr->smoothPath(voronoiDiagram, path2smooth);
+            //smoother_ptr->smoothPath(voronoiDiagram, path2smooth); //这个是梯度下降版的
             
             vector<Vec3d> smooth_path;
             smoother_ptr->getSmoothPath(smooth_path);
@@ -168,7 +182,7 @@ void run() {
             cout << "smooth path use time:" << smooth_path_use_time.count() * 1000 << "ms" << std::endl;
 
            
-
+            //可视化混合A星搜索的一些东西，其实可以写成一个函数，放在这太臃肿了
             visualization_msgs::Marker marker;
             marker.header.frame_id = "map"; // 
             marker.header.stamp = ros::Time::now();
@@ -198,6 +212,7 @@ void run() {
                 vis.publishVehicleBoxes({smooth_path[i](0), smooth_path[i](1), smooth_path[i](2)}, i);
             }
             marker_pub.publish(marker);
+            //可视化平滑后的路径
             visPath(smooth_path);
 
             has_start = false;
@@ -213,6 +228,11 @@ void run() {
 
 }
 
+/**
+ * @brief 可视化平滑后的路径
+ * 
+ * @param path 
+ */
 void visPath(std::vector<Eigen::Vector3d> path) {
     nav_msgs::Path nav_path;
     nav_path.header.frame_id = "map";
@@ -228,6 +248,11 @@ void visPath(std::vector<Eigen::Vector3d> path) {
     path_vis_pub.publish(nav_path);
 
 }
+/**
+ * @brief 接收起始点位姿
+ * 
+ * @param msg 
+ */
 void startCallback(const geometry_msgs::PoseWithCovarianceStamped msg) {
 
     start_pose[0] = msg.pose.pose.position.x;
@@ -238,6 +263,11 @@ void startCallback(const geometry_msgs::PoseWithCovarianceStamped msg) {
 
 }
 
+/**
+ * @brief 接收目标点位姿
+ * 
+ * @param msg 
+ */
 void goalCallback(const geometry_msgs::PoseStamped msg) {
 
     goal_pose[0] = msg.pose.position.x;

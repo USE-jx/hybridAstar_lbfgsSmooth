@@ -35,6 +35,14 @@ GridSearch::GridSearch(grid_map::GridMap map) {
 
 }
 
+/**
+ * @brief 通过A星的距离作为启发式函数，一般不用，因为每次扩展节点都用一次A星累积起来太多了
+ * 
+ * @param start_pos 
+ * @param goal_pos 
+ * @return true 
+ * @return false 
+ */
 bool GridSearch::calculateHeuByAstar(Vec2d start_pos, Vec2d goal_pos) {
     cout << "A star search" << endl;
     priority_queue<pair<int, double>, vector<pair<int, double>>, cmp> open_pq;
@@ -117,7 +125,13 @@ bool GridSearch::calculateHeuByAstar(Vec2d start_pos, Vec2d goal_pos) {
     return true;
 
 }
-
+/**
+ * @brief 先生成一个到终点的距离表，每次扩展都直接查表即可，但是构建这个表也要花很多时间
+ * 
+ * @param goal_pos 
+ * @return true 
+ * @return false 
+ */
 bool GridSearch::generateDpMap(Vec2d goal_pos) {
     priority_queue<pair<int, double>, vector<pair<int, double>>, cmp> open_pq;
     unordered_map<int, shared_ptr<Node2d>> open_set;
@@ -178,7 +192,12 @@ bool GridSearch::generateDpMap(Vec2d goal_pos) {
     cout << "搜索的节点数是：" << explored_node_num << endl; 
     return true;
 }
-
+/**
+ * @brief 查询到终点的距离
+ * 
+ * @param start_pos 
+ * @return double 
+ */
 double GridSearch::lookupInDpMap(Vec2d start_pos) {
     Vec2i start_idx = getIndexFromPosition(start_pos);
     shared_ptr<Node2d> start_node = make_shared<Node2d>(start_idx, map_size_x_);
@@ -239,6 +258,11 @@ bool GridSearch::isOnObstacle(shared_ptr<Node2d> node) {
     return false;
 }
 
+/**
+ * @brief 从终点回溯整条路径
+ * 
+ * @return vector<Vec2d> 
+ */
 vector<Vec2d> GridSearch::getAstartPath() {
     shared_ptr<Node2d> cur_node = final_node_;
     vector<shared_ptr<Node2d>> vec;

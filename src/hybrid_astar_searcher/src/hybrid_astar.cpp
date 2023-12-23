@@ -42,6 +42,15 @@ HybridAstar::HybridAstar(grid_map::GridMap map) {
 
 HybridAstar::~HybridAstar() {}
 
+/**
+ * @brief 混合A星搜索
+ * 
+ * @param start_pose 
+ * @param goal_pose 
+ * @param result 
+ * @return true 
+ * @return false 
+ */
 bool HybridAstar::plan(Vec3d start_pose, Vec3d goal_pose, HybridAstarResult &result) {
     open_set_.clear();
     close_set_.clear();
@@ -213,7 +222,7 @@ shared_ptr<Node3d> HybridAstar::nextNodeGenerator(shared_ptr<Node3d> cur_node, i
 
     //存储节点的一堆中间点
     double arc = sqrt(2) * xy_resolution_; //可以设置想走多长，这个是栅格对角
-    arc = 2.1; //可以设置想走多长，这个是栅格对角
+    arc = 2.1; //可以设置想走多长
     //cout << "111111" << endl;
     vector<double> traversed_x;
     vector<double> traversed_y;
@@ -330,6 +339,16 @@ vector<Vec2d> HybridAstar::calculateCarBoundingBox(Vec3d pose) {
     return vertices;
 
 }
+/**
+ * @brief 查询一条线上的点是否在障碍物里
+ * 
+ * @param x0 
+ * @param y0 
+ * @param x1 
+ * @param y1 
+ * @return true 
+ * @return false 
+ */
 bool HybridAstar::isLinecollision(double x0, double y0, double x1, double y1) {
     //int check_point_num = static_cast<int>(max(abs(x1 - x0),abs(y1 - y0)) / xy_resolution_) + 1;
     int check_point_num = static_cast<int>(max(abs(x1 - x0),abs(y1 - y0)) / 1) + 1;
@@ -355,7 +374,13 @@ bool HybridAstar::isLinecollision(double x0, double y0, double x1, double y1) {
     return false;
 }
 
-
+/**
+ * @brief 验证节点是否可行，需要得到车的轮廓，然后用上边的判断四条边是否穿过障碍物
+ * 
+ * @param node 
+ * @return true 
+ * @return false 
+ */
 bool HybridAstar::validityCheck(std::shared_ptr<Node3d> node) {
     
     int node_step_size = node->getStepSize();
@@ -397,7 +422,13 @@ Vec3i HybridAstar::getIndexFromPose(Vec3d pose) {
     return index;
 }
 
-
+/**
+ * @brief 直接用RS曲线连接到终点
+ * 
+ * @param current_node 
+ * @return true 
+ * @return false 
+ */
 bool HybridAstar::AnalyticExpansion(std::shared_ptr<Node3d> current_node) {
     std::shared_ptr<ReedSheppPath> reeds_shepp_to_check =
         std::make_shared<ReedSheppPath>();
