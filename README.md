@@ -12,12 +12,14 @@ hybrid astar with smooth, optimization solver is lbfgs
 1 安装grid_map
 
 ```
-sudo apt-get install ros-$ROS_DISTRO-grid-map
+sudo apt install ros-$ROS_DISTRO-grid-map
 ```
 
 2 安装OMPL运动规划库
 
-去官网https://ompl.kavrakilab.org/installation.html安装一下
+```
+sydo apt install ros-$ROS_DISTRO-ompl
+```
 
 ## 编译运行
 
