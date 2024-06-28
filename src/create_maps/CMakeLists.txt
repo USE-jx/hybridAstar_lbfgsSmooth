@@ -11,7 +11,7 @@ find_package(ompl REQUIRED)
 if(NOT OMPL_FOUND)
     message(AUTHOR_WARNING,"Open Motion Planning Library not found")
 endif(NOT OMPL_FOUND)
-find_package(casadi REQUIRED)
+
 find_package(catkin REQUIRED COMPONENTS
   filters
   geometry_msgs
